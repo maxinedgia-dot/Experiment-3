@@ -1,1213 +1,227 @@
-{
-  "cells": [
-    {
-      "cell_type": "markdown",
-      "source": [
-        "# **ECE2112-PA-3**\n",
-        "\n",
-        "\n",
-        "---\n",
-        "\n",
-        "\n",
-        "**De Guia, Maxine Juliana S.**  \n",
-        "2ECE-D  \n",
-        "\n",
-        "This repository contains the Pandas implementation for ECE2112 Experiment 3: Python Data Analysis. It covers fundamental Pandas library operations for loading CSV datasets into DataFrames, performing positional (.iloc) and label-based (.loc) indexing, applying Boolean mask filtering on DataFrame columns, and extracting structured data subsets without modifying the original source dataset.\n"
-      ],
-      "metadata": {
-        "id": "x4IBmTWD3cPL"
-      },
-      "id": "x4IBmTWD3cPL"
-    },
-    {
-      "cell_type": "code",
-      "execution_count": null,
-      "id": "b67d4bb4-8368-4420-9c73-688d48fd7ba2",
-      "metadata": {
-        "id": "b67d4bb4-8368-4420-9c73-688d48fd7ba2"
-      },
-      "outputs": [],
-      "source": [
-        "import pandas as pd"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "id": "75aba022-f828-418c-ab2f-07be02c00105",
-      "metadata": {
-        "id": "75aba022-f828-418c-ab2f-07be02c00105"
-      },
-      "source": [
-        "**A. POSITIONAL AND LABEL-BASED SLICING**"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "source": [
-        "`pd.read_cvs('cars.csv') `reads the raw dataset and stores it in memory as a 2D table called a DataFrame named `cars`."
-      ],
-      "metadata": {
-        "id": "Y4IxgoEVzj3w"
-      },
-      "id": "Y4IxgoEVzj3w"
-    },
-    {
-      "cell_type": "code",
-      "execution_count": null,
-      "id": "4df223f9-a340-4437-b242-9378af063238",
-      "metadata": {
-        "id": "4df223f9-a340-4437-b242-9378af063238",
-        "outputId": "f4e20867-2629-4214-dd1a-224f29939199"
-      },
-      "outputs": [
-        {
-          "data": {
-            "text/html": [
-              "<div>\n",
-              "<style scoped>\n",
-              "    .dataframe tbody tr th:only-of-type {\n",
-              "        vertical-align: middle;\n",
-              "    }\n",
-              "\n",
-              "    .dataframe tbody tr th {\n",
-              "        vertical-align: top;\n",
-              "    }\n",
-              "\n",
-              "    .dataframe thead th {\n",
-              "        text-align: right;\n",
-              "    }\n",
-              "</style>\n",
-              "<table border=\"1\" class=\"dataframe\">\n",
-              "  <thead>\n",
-              "    <tr style=\"text-align: right;\">\n",
-              "      <th></th>\n",
-              "      <th>Model</th>\n",
-              "      <th>mpg</th>\n",
-              "      <th>cyl</th>\n",
-              "      <th>disp</th>\n",
-              "      <th>hp</th>\n",
-              "      <th>drat</th>\n",
-              "      <th>wt</th>\n",
-              "      <th>qsec</th>\n",
-              "      <th>vs</th>\n",
-              "      <th>am</th>\n",
-              "      <th>gear</th>\n",
-              "      <th>carb</th>\n",
-              "    </tr>\n",
-              "  </thead>\n",
-              "  <tbody>\n",
-              "    <tr>\n",
-              "      <th>0</th>\n",
-              "      <td>Mazda RX4</td>\n",
-              "      <td>21.0</td>\n",
-              "      <td>6</td>\n",
-              "      <td>160.0</td>\n",
-              "      <td>110</td>\n",
-              "      <td>3.90</td>\n",
-              "      <td>2.620</td>\n",
-              "      <td>16.46</td>\n",
-              "      <td>0</td>\n",
-              "      <td>1</td>\n",
-              "      <td>4</td>\n",
-              "      <td>4</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>1</th>\n",
-              "      <td>Mazda RX4 Wag</td>\n",
-              "      <td>21.0</td>\n",
-              "      <td>6</td>\n",
-              "      <td>160.0</td>\n",
-              "      <td>110</td>\n",
-              "      <td>3.90</td>\n",
-              "      <td>2.875</td>\n",
-              "      <td>17.02</td>\n",
-              "      <td>0</td>\n",
-              "      <td>1</td>\n",
-              "      <td>4</td>\n",
-              "      <td>4</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>2</th>\n",
-              "      <td>Datsun 710</td>\n",
-              "      <td>22.8</td>\n",
-              "      <td>4</td>\n",
-              "      <td>108.0</td>\n",
-              "      <td>93</td>\n",
-              "      <td>3.85</td>\n",
-              "      <td>2.320</td>\n",
-              "      <td>18.61</td>\n",
-              "      <td>1</td>\n",
-              "      <td>1</td>\n",
-              "      <td>4</td>\n",
-              "      <td>1</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>3</th>\n",
-              "      <td>Hornet 4 Drive</td>\n",
-              "      <td>21.4</td>\n",
-              "      <td>6</td>\n",
-              "      <td>258.0</td>\n",
-              "      <td>110</td>\n",
-              "      <td>3.08</td>\n",
-              "      <td>3.215</td>\n",
-              "      <td>19.44</td>\n",
-              "      <td>1</td>\n",
-              "      <td>0</td>\n",
-              "      <td>3</td>\n",
-              "      <td>1</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>4</th>\n",
-              "      <td>Hornet Sportabout</td>\n",
-              "      <td>18.7</td>\n",
-              "      <td>8</td>\n",
-              "      <td>360.0</td>\n",
-              "      <td>175</td>\n",
-              "      <td>3.15</td>\n",
-              "      <td>3.440</td>\n",
-              "      <td>17.02</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>3</td>\n",
-              "      <td>2</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>5</th>\n",
-              "      <td>Valiant</td>\n",
-              "      <td>18.1</td>\n",
-              "      <td>6</td>\n",
-              "      <td>225.0</td>\n",
-              "      <td>105</td>\n",
-              "      <td>2.76</td>\n",
-              "      <td>3.460</td>\n",
-              "      <td>20.22</td>\n",
-              "      <td>1</td>\n",
-              "      <td>0</td>\n",
-              "      <td>3</td>\n",
-              "      <td>1</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>6</th>\n",
-              "      <td>Duster 360</td>\n",
-              "      <td>14.3</td>\n",
-              "      <td>8</td>\n",
-              "      <td>360.0</td>\n",
-              "      <td>245</td>\n",
-              "      <td>3.21</td>\n",
-              "      <td>3.570</td>\n",
-              "      <td>15.84</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>3</td>\n",
-              "      <td>4</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>7</th>\n",
-              "      <td>Merc 240D</td>\n",
-              "      <td>24.4</td>\n",
-              "      <td>4</td>\n",
-              "      <td>146.7</td>\n",
-              "      <td>62</td>\n",
-              "      <td>3.69</td>\n",
-              "      <td>3.190</td>\n",
-              "      <td>20.00</td>\n",
-              "      <td>1</td>\n",
-              "      <td>0</td>\n",
-              "      <td>4</td>\n",
-              "      <td>2</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>8</th>\n",
-              "      <td>Merc 230</td>\n",
-              "      <td>22.8</td>\n",
-              "      <td>4</td>\n",
-              "      <td>140.8</td>\n",
-              "      <td>95</td>\n",
-              "      <td>3.92</td>\n",
-              "      <td>3.150</td>\n",
-              "      <td>22.90</td>\n",
-              "      <td>1</td>\n",
-              "      <td>0</td>\n",
-              "      <td>4</td>\n",
-              "      <td>2</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>9</th>\n",
-              "      <td>Merc 280</td>\n",
-              "      <td>19.2</td>\n",
-              "      <td>6</td>\n",
-              "      <td>167.6</td>\n",
-              "      <td>123</td>\n",
-              "      <td>3.92</td>\n",
-              "      <td>3.440</td>\n",
-              "      <td>18.30</td>\n",
-              "      <td>1</td>\n",
-              "      <td>0</td>\n",
-              "      <td>4</td>\n",
-              "      <td>4</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>10</th>\n",
-              "      <td>Merc 280C</td>\n",
-              "      <td>17.8</td>\n",
-              "      <td>6</td>\n",
-              "      <td>167.6</td>\n",
-              "      <td>123</td>\n",
-              "      <td>3.92</td>\n",
-              "      <td>3.440</td>\n",
-              "      <td>18.90</td>\n",
-              "      <td>1</td>\n",
-              "      <td>0</td>\n",
-              "      <td>4</td>\n",
-              "      <td>4</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>11</th>\n",
-              "      <td>Merc 450SE</td>\n",
-              "      <td>16.4</td>\n",
-              "      <td>8</td>\n",
-              "      <td>275.8</td>\n",
-              "      <td>180</td>\n",
-              "      <td>3.07</td>\n",
-              "      <td>4.070</td>\n",
-              "      <td>17.40</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>3</td>\n",
-              "      <td>3</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>12</th>\n",
-              "      <td>Merc 450SL</td>\n",
-              "      <td>17.3</td>\n",
-              "      <td>8</td>\n",
-              "      <td>275.8</td>\n",
-              "      <td>180</td>\n",
-              "      <td>3.07</td>\n",
-              "      <td>3.730</td>\n",
-              "      <td>17.60</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>3</td>\n",
-              "      <td>3</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>13</th>\n",
-              "      <td>Merc 450SLC</td>\n",
-              "      <td>15.2</td>\n",
-              "      <td>8</td>\n",
-              "      <td>275.8</td>\n",
-              "      <td>180</td>\n",
-              "      <td>3.07</td>\n",
-              "      <td>3.780</td>\n",
-              "      <td>18.00</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>3</td>\n",
-              "      <td>3</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>14</th>\n",
-              "      <td>Cadillac Fleetwood</td>\n",
-              "      <td>10.4</td>\n",
-              "      <td>8</td>\n",
-              "      <td>472.0</td>\n",
-              "      <td>205</td>\n",
-              "      <td>2.93</td>\n",
-              "      <td>5.250</td>\n",
-              "      <td>17.98</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>3</td>\n",
-              "      <td>4</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>15</th>\n",
-              "      <td>Lincoln Continental</td>\n",
-              "      <td>10.4</td>\n",
-              "      <td>8</td>\n",
-              "      <td>460.0</td>\n",
-              "      <td>215</td>\n",
-              "      <td>3.00</td>\n",
-              "      <td>5.424</td>\n",
-              "      <td>17.82</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>3</td>\n",
-              "      <td>4</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>16</th>\n",
-              "      <td>Chrysler Imperial</td>\n",
-              "      <td>14.7</td>\n",
-              "      <td>8</td>\n",
-              "      <td>440.0</td>\n",
-              "      <td>230</td>\n",
-              "      <td>3.23</td>\n",
-              "      <td>5.345</td>\n",
-              "      <td>17.42</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>3</td>\n",
-              "      <td>4</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>17</th>\n",
-              "      <td>Fiat 128</td>\n",
-              "      <td>32.4</td>\n",
-              "      <td>4</td>\n",
-              "      <td>78.7</td>\n",
-              "      <td>66</td>\n",
-              "      <td>4.08</td>\n",
-              "      <td>2.200</td>\n",
-              "      <td>19.47</td>\n",
-              "      <td>1</td>\n",
-              "      <td>1</td>\n",
-              "      <td>4</td>\n",
-              "      <td>1</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>18</th>\n",
-              "      <td>Honda Civic</td>\n",
-              "      <td>30.4</td>\n",
-              "      <td>4</td>\n",
-              "      <td>75.7</td>\n",
-              "      <td>52</td>\n",
-              "      <td>4.93</td>\n",
-              "      <td>1.615</td>\n",
-              "      <td>18.52</td>\n",
-              "      <td>1</td>\n",
-              "      <td>1</td>\n",
-              "      <td>4</td>\n",
-              "      <td>2</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>19</th>\n",
-              "      <td>Toyota Corolla</td>\n",
-              "      <td>33.9</td>\n",
-              "      <td>4</td>\n",
-              "      <td>71.1</td>\n",
-              "      <td>65</td>\n",
-              "      <td>4.22</td>\n",
-              "      <td>1.835</td>\n",
-              "      <td>19.90</td>\n",
-              "      <td>1</td>\n",
-              "      <td>1</td>\n",
-              "      <td>4</td>\n",
-              "      <td>1</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>20</th>\n",
-              "      <td>Toyota Corona</td>\n",
-              "      <td>21.5</td>\n",
-              "      <td>4</td>\n",
-              "      <td>120.1</td>\n",
-              "      <td>97</td>\n",
-              "      <td>3.70</td>\n",
-              "      <td>2.465</td>\n",
-              "      <td>20.01</td>\n",
-              "      <td>1</td>\n",
-              "      <td>0</td>\n",
-              "      <td>3</td>\n",
-              "      <td>1</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>21</th>\n",
-              "      <td>Dodge Challenger</td>\n",
-              "      <td>15.5</td>\n",
-              "      <td>8</td>\n",
-              "      <td>318.0</td>\n",
-              "      <td>150</td>\n",
-              "      <td>2.76</td>\n",
-              "      <td>3.520</td>\n",
-              "      <td>16.87</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>3</td>\n",
-              "      <td>2</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>22</th>\n",
-              "      <td>AMC Javelin</td>\n",
-              "      <td>15.2</td>\n",
-              "      <td>8</td>\n",
-              "      <td>304.0</td>\n",
-              "      <td>150</td>\n",
-              "      <td>3.15</td>\n",
-              "      <td>3.435</td>\n",
-              "      <td>17.30</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>3</td>\n",
-              "      <td>2</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>23</th>\n",
-              "      <td>Camaro Z28</td>\n",
-              "      <td>13.3</td>\n",
-              "      <td>8</td>\n",
-              "      <td>350.0</td>\n",
-              "      <td>245</td>\n",
-              "      <td>3.73</td>\n",
-              "      <td>3.840</td>\n",
-              "      <td>15.41</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>3</td>\n",
-              "      <td>4</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>24</th>\n",
-              "      <td>Pontiac Firebird</td>\n",
-              "      <td>19.2</td>\n",
-              "      <td>8</td>\n",
-              "      <td>400.0</td>\n",
-              "      <td>175</td>\n",
-              "      <td>3.08</td>\n",
-              "      <td>3.845</td>\n",
-              "      <td>17.05</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>3</td>\n",
-              "      <td>2</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>25</th>\n",
-              "      <td>Fiat X1-9</td>\n",
-              "      <td>27.3</td>\n",
-              "      <td>4</td>\n",
-              "      <td>79.0</td>\n",
-              "      <td>66</td>\n",
-              "      <td>4.08</td>\n",
-              "      <td>1.935</td>\n",
-              "      <td>18.90</td>\n",
-              "      <td>1</td>\n",
-              "      <td>1</td>\n",
-              "      <td>4</td>\n",
-              "      <td>1</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>26</th>\n",
-              "      <td>Porsche 914-2</td>\n",
-              "      <td>26.0</td>\n",
-              "      <td>4</td>\n",
-              "      <td>120.3</td>\n",
-              "      <td>91</td>\n",
-              "      <td>4.43</td>\n",
-              "      <td>2.140</td>\n",
-              "      <td>16.70</td>\n",
-              "      <td>0</td>\n",
-              "      <td>1</td>\n",
-              "      <td>5</td>\n",
-              "      <td>2</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>27</th>\n",
-              "      <td>Lotus Europa</td>\n",
-              "      <td>30.4</td>\n",
-              "      <td>4</td>\n",
-              "      <td>95.1</td>\n",
-              "      <td>113</td>\n",
-              "      <td>3.77</td>\n",
-              "      <td>1.513</td>\n",
-              "      <td>16.90</td>\n",
-              "      <td>1</td>\n",
-              "      <td>1</td>\n",
-              "      <td>5</td>\n",
-              "      <td>2</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>28</th>\n",
-              "      <td>Ford Pantera L</td>\n",
-              "      <td>15.8</td>\n",
-              "      <td>8</td>\n",
-              "      <td>351.0</td>\n",
-              "      <td>264</td>\n",
-              "      <td>4.22</td>\n",
-              "      <td>3.170</td>\n",
-              "      <td>14.50</td>\n",
-              "      <td>0</td>\n",
-              "      <td>1</td>\n",
-              "      <td>5</td>\n",
-              "      <td>4</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>29</th>\n",
-              "      <td>Ferrari Dino</td>\n",
-              "      <td>19.7</td>\n",
-              "      <td>6</td>\n",
-              "      <td>145.0</td>\n",
-              "      <td>175</td>\n",
-              "      <td>3.62</td>\n",
-              "      <td>2.770</td>\n",
-              "      <td>15.50</td>\n",
-              "      <td>0</td>\n",
-              "      <td>1</td>\n",
-              "      <td>5</td>\n",
-              "      <td>6</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>30</th>\n",
-              "      <td>Maserati Bora</td>\n",
-              "      <td>15.0</td>\n",
-              "      <td>8</td>\n",
-              "      <td>301.0</td>\n",
-              "      <td>335</td>\n",
-              "      <td>3.54</td>\n",
-              "      <td>3.570</td>\n",
-              "      <td>14.60</td>\n",
-              "      <td>0</td>\n",
-              "      <td>1</td>\n",
-              "      <td>5</td>\n",
-              "      <td>8</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>31</th>\n",
-              "      <td>Volvo 142E</td>\n",
-              "      <td>21.4</td>\n",
-              "      <td>4</td>\n",
-              "      <td>121.0</td>\n",
-              "      <td>109</td>\n",
-              "      <td>4.11</td>\n",
-              "      <td>2.780</td>\n",
-              "      <td>18.60</td>\n",
-              "      <td>1</td>\n",
-              "      <td>1</td>\n",
-              "      <td>4</td>\n",
-              "      <td>2</td>\n",
-              "    </tr>\n",
-              "  </tbody>\n",
-              "</table>\n",
-              "</div>"
-            ],
-            "text/plain": [
-              "                  Model   mpg  cyl   disp   hp  drat     wt   qsec  vs  am  \\\n",
-              "0             Mazda RX4  21.0    6  160.0  110  3.90  2.620  16.46   0   1   \n",
-              "1         Mazda RX4 Wag  21.0    6  160.0  110  3.90  2.875  17.02   0   1   \n",
-              "2            Datsun 710  22.8    4  108.0   93  3.85  2.320  18.61   1   1   \n",
-              "3        Hornet 4 Drive  21.4    6  258.0  110  3.08  3.215  19.44   1   0   \n",
-              "4     Hornet Sportabout  18.7    8  360.0  175  3.15  3.440  17.02   0   0   \n",
-              "5               Valiant  18.1    6  225.0  105  2.76  3.460  20.22   1   0   \n",
-              "6            Duster 360  14.3    8  360.0  245  3.21  3.570  15.84   0   0   \n",
-              "7             Merc 240D  24.4    4  146.7   62  3.69  3.190  20.00   1   0   \n",
-              "8              Merc 230  22.8    4  140.8   95  3.92  3.150  22.90   1   0   \n",
-              "9              Merc 280  19.2    6  167.6  123  3.92  3.440  18.30   1   0   \n",
-              "10            Merc 280C  17.8    6  167.6  123  3.92  3.440  18.90   1   0   \n",
-              "11           Merc 450SE  16.4    8  275.8  180  3.07  4.070  17.40   0   0   \n",
-              "12           Merc 450SL  17.3    8  275.8  180  3.07  3.730  17.60   0   0   \n",
-              "13          Merc 450SLC  15.2    8  275.8  180  3.07  3.780  18.00   0   0   \n",
-              "14   Cadillac Fleetwood  10.4    8  472.0  205  2.93  5.250  17.98   0   0   \n",
-              "15  Lincoln Continental  10.4    8  460.0  215  3.00  5.424  17.82   0   0   \n",
-              "16    Chrysler Imperial  14.7    8  440.0  230  3.23  5.345  17.42   0   0   \n",
-              "17             Fiat 128  32.4    4   78.7   66  4.08  2.200  19.47   1   1   \n",
-              "18          Honda Civic  30.4    4   75.7   52  4.93  1.615  18.52   1   1   \n",
-              "19       Toyota Corolla  33.9    4   71.1   65  4.22  1.835  19.90   1   1   \n",
-              "20        Toyota Corona  21.5    4  120.1   97  3.70  2.465  20.01   1   0   \n",
-              "21     Dodge Challenger  15.5    8  318.0  150  2.76  3.520  16.87   0   0   \n",
-              "22          AMC Javelin  15.2    8  304.0  150  3.15  3.435  17.30   0   0   \n",
-              "23           Camaro Z28  13.3    8  350.0  245  3.73  3.840  15.41   0   0   \n",
-              "24     Pontiac Firebird  19.2    8  400.0  175  3.08  3.845  17.05   0   0   \n",
-              "25            Fiat X1-9  27.3    4   79.0   66  4.08  1.935  18.90   1   1   \n",
-              "26        Porsche 914-2  26.0    4  120.3   91  4.43  2.140  16.70   0   1   \n",
-              "27         Lotus Europa  30.4    4   95.1  113  3.77  1.513  16.90   1   1   \n",
-              "28       Ford Pantera L  15.8    8  351.0  264  4.22  3.170  14.50   0   1   \n",
-              "29         Ferrari Dino  19.7    6  145.0  175  3.62  2.770  15.50   0   1   \n",
-              "30        Maserati Bora  15.0    8  301.0  335  3.54  3.570  14.60   0   1   \n",
-              "31           Volvo 142E  21.4    4  121.0  109  4.11  2.780  18.60   1   1   \n",
-              "\n",
-              "    gear  carb  \n",
-              "0      4     4  \n",
-              "1      4     4  \n",
-              "2      4     1  \n",
-              "3      3     1  \n",
-              "4      3     2  \n",
-              "5      3     1  \n",
-              "6      3     4  \n",
-              "7      4     2  \n",
-              "8      4     2  \n",
-              "9      4     4  \n",
-              "10     4     4  \n",
-              "11     3     3  \n",
-              "12     3     3  \n",
-              "13     3     3  \n",
-              "14     3     4  \n",
-              "15     3     4  \n",
-              "16     3     4  \n",
-              "17     4     1  \n",
-              "18     4     2  \n",
-              "19     4     1  \n",
-              "20     3     1  \n",
-              "21     3     2  \n",
-              "22     3     2  \n",
-              "23     3     4  \n",
-              "24     3     2  \n",
-              "25     4     1  \n",
-              "26     5     2  \n",
-              "27     5     2  \n",
-              "28     5     4  \n",
-              "29     5     6  \n",
-              "30     5     8  \n",
-              "31     4     2  "
-            ]
-          },
-          "execution_count": 26,
-          "metadata": {},
-          "output_type": "execute_result"
-        }
-      ],
-      "source": [
-        "cars = pd.read_csv ('cars.csv')\n",
-        "cars"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "source": [
-        "`cars.shape return `a tuple `(32, 12)` indicating the total dimensions of the dataset (32 rows and 12 columns) while `cars.columns` retrieves the column headers. wrapping it in `list()` formats it inot a standard Python list."
-      ],
-      "metadata": {
-        "id": "i95Y4EC_4H7O"
-      },
-      "id": "i95Y4EC_4H7O"
-    },
-    {
-      "cell_type": "code",
-      "execution_count": null,
-      "id": "eda1da80-e891-4572-be25-e6cde9039767",
-      "metadata": {
-        "id": "eda1da80-e891-4572-be25-e6cde9039767",
-        "outputId": "f44938eb-2df5-4828-c4c6-87aa5a8d6903"
-      },
-      "outputs": [
-        {
-          "name": "stdout",
-          "output_type": "stream",
-          "text": [
-            "Shape of cars: (32, 12)\n",
-            "Columns: ['Model', 'mpg', 'cyl', 'disp', 'hp', 'drat', 'wt', 'qsec', 'vs', 'am', 'gear', 'carb']\n"
-          ]
-        }
-      ],
-      "source": [
-        "print(\"Shape of cars:\", cars.shape)\n",
-        "print(\"Columns:\", list(cars.columns))"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "source": [
-        "`cars.iloc[6:11]` stands for integer location. It selected rows based on their O-indexed position. In Python slicing `start:stop`, the stop index is exclusive. Index `6:11` extracts index position 6, 7, 8, 9 and 10 which corresponding to data rows 7 through 11 in 1-based counting."
-      ],
-      "metadata": {
-        "id": "kf9oeFuU5e1Q"
-      },
-      "id": "kf9oeFuU5e1Q"
-    },
-    {
-      "cell_type": "code",
-      "execution_count": null,
-      "id": "34104d21-b6cc-4d9b-9f18-a52c7c7fc06e",
-      "metadata": {
-        "id": "34104d21-b6cc-4d9b-9f18-a52c7c7fc06e"
-      },
-      "outputs": [],
-      "source": [
-        "cars_6_to_10 = cars.iloc[6:11]"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "source": [
-        "`[['Model', 'mpg', 'cyl', 'hp', 'gear']]` uses double square brackets to perform label-based column selection, extracting only the specified columns from `cars_6_to_10` without altering row selections."
-      ],
-      "metadata": {
-        "id": "BRw1sHOP6iX2"
-      },
-      "id": "BRw1sHOP6iX2"
-    },
-    {
-      "cell_type": "code",
-      "execution_count": null,
-      "id": "f349ef05-b669-4bed-b9f3-e25bd03efc06",
-      "metadata": {
-        "id": "f349ef05-b669-4bed-b9f3-e25bd03efc06",
-        "outputId": "f756fed9-390f-4394-8bf4-f9d613002bc7"
-      },
-      "outputs": [
-        {
-          "data": {
-            "text/html": [
-              "<div>\n",
-              "<style scoped>\n",
-              "    .dataframe tbody tr th:only-of-type {\n",
-              "        vertical-align: middle;\n",
-              "    }\n",
-              "\n",
-              "    .dataframe tbody tr th {\n",
-              "        vertical-align: top;\n",
-              "    }\n",
-              "\n",
-              "    .dataframe thead th {\n",
-              "        text-align: right;\n",
-              "    }\n",
-              "</style>\n",
-              "<table border=\"1\" class=\"dataframe\">\n",
-              "  <thead>\n",
-              "    <tr style=\"text-align: right;\">\n",
-              "      <th></th>\n",
-              "      <th>Model</th>\n",
-              "      <th>mpg</th>\n",
-              "      <th>cyl</th>\n",
-              "      <th>hp</th>\n",
-              "      <th>gear</th>\n",
-              "    </tr>\n",
-              "  </thead>\n",
-              "  <tbody>\n",
-              "    <tr>\n",
-              "      <th>6</th>\n",
-              "      <td>Duster 360</td>\n",
-              "      <td>14.3</td>\n",
-              "      <td>8</td>\n",
-              "      <td>245</td>\n",
-              "      <td>3</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>7</th>\n",
-              "      <td>Merc 240D</td>\n",
-              "      <td>24.4</td>\n",
-              "      <td>4</td>\n",
-              "      <td>62</td>\n",
-              "      <td>4</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>8</th>\n",
-              "      <td>Merc 230</td>\n",
-              "      <td>22.8</td>\n",
-              "      <td>4</td>\n",
-              "      <td>95</td>\n",
-              "      <td>4</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>9</th>\n",
-              "      <td>Merc 280</td>\n",
-              "      <td>19.2</td>\n",
-              "      <td>6</td>\n",
-              "      <td>123</td>\n",
-              "      <td>4</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>10</th>\n",
-              "      <td>Merc 280C</td>\n",
-              "      <td>17.8</td>\n",
-              "      <td>6</td>\n",
-              "      <td>123</td>\n",
-              "      <td>4</td>\n",
-              "    </tr>\n",
-              "  </tbody>\n",
-              "</table>\n",
-              "</div>"
-            ],
-            "text/plain": [
-              "         Model   mpg  cyl   hp  gear\n",
-              "6   Duster 360  14.3    8  245     3\n",
-              "7    Merc 240D  24.4    4   62     4\n",
-              "8     Merc 230  22.8    4   95     4\n",
-              "9     Merc 280  19.2    6  123     4\n",
-              "10   Merc 280C  17.8    6  123     4"
-            ]
-          },
-          "execution_count": 91,
-          "metadata": {},
-          "output_type": "execute_result"
-        }
-      ],
-      "source": [
-        "selected_cols = cars_6_to_10[['Model', 'mpg', 'cyl', 'hp', 'gear']]\n",
-        "selected_cols"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "id": "fc1cabae-cb8f-4327-b66e-0f8ced595ed4",
-      "metadata": {
-        "id": "fc1cabae-cb8f-4327-b66e-0f8ced595ed4"
-      },
-      "source": [
-        "**B. MODEL LOOKUP SLICING**"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "source": [
-        "`cars['Model'] == 'Toyota Corolla'` creates a boolean mask checking every row in the `Model` column. `cars[]` wraps the condition inside the outer DataFrame brackets to filter and return only the rows where the mask evaluates to `True`."
-      ],
-      "metadata": {
-        "id": "RaiJ0XpO7IJG"
-      },
-      "id": "RaiJ0XpO7IJG"
-    },
-    {
-      "cell_type": "code",
-      "execution_count": null,
-      "id": "69558140-7539-42d7-90ca-4604e10ebf5f",
-      "metadata": {
-        "id": "69558140-7539-42d7-90ca-4604e10ebf5f",
-        "outputId": "b07215e8-3fe6-47ab-e5ba-0860bf53f07c"
-      },
-      "outputs": [
-        {
-          "data": {
-            "text/html": [
-              "<div>\n",
-              "<style scoped>\n",
-              "    .dataframe tbody tr th:only-of-type {\n",
-              "        vertical-align: middle;\n",
-              "    }\n",
-              "\n",
-              "    .dataframe tbody tr th {\n",
-              "        vertical-align: top;\n",
-              "    }\n",
-              "\n",
-              "    .dataframe thead th {\n",
-              "        text-align: right;\n",
-              "    }\n",
-              "</style>\n",
-              "<table border=\"1\" class=\"dataframe\">\n",
-              "  <thead>\n",
-              "    <tr style=\"text-align: right;\">\n",
-              "      <th></th>\n",
-              "      <th>Model</th>\n",
-              "      <th>mpg</th>\n",
-              "      <th>cyl</th>\n",
-              "      <th>disp</th>\n",
-              "      <th>hp</th>\n",
-              "      <th>drat</th>\n",
-              "      <th>wt</th>\n",
-              "      <th>qsec</th>\n",
-              "      <th>vs</th>\n",
-              "      <th>am</th>\n",
-              "      <th>gear</th>\n",
-              "      <th>carb</th>\n",
-              "    </tr>\n",
-              "  </thead>\n",
-              "  <tbody>\n",
-              "    <tr>\n",
-              "      <th>19</th>\n",
-              "      <td>Toyota Corolla</td>\n",
-              "      <td>33.9</td>\n",
-              "      <td>4</td>\n",
-              "      <td>71.1</td>\n",
-              "      <td>65</td>\n",
-              "      <td>4.22</td>\n",
-              "      <td>1.835</td>\n",
-              "      <td>19.9</td>\n",
-              "      <td>1</td>\n",
-              "      <td>1</td>\n",
-              "      <td>4</td>\n",
-              "      <td>1</td>\n",
-              "    </tr>\n",
-              "  </tbody>\n",
-              "</table>\n",
-              "</div>"
-            ],
-            "text/plain": [
-              "             Model   mpg  cyl  disp  hp  drat     wt  qsec  vs  am  gear  carb\n",
-              "19  Toyota Corolla  33.9    4  71.1  65  4.22  1.835  19.9   1   1     4     1"
-            ]
-          },
-          "metadata": {},
-          "output_type": "display_data"
-        }
-      ],
-      "source": [
-        "toyota = cars[cars['Model'] == 'Toyota Corolla']\n",
-        "display(toyota)"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "source": [
-        "cars.loc`[row_condition, column_list]` uses label-based indexing `.loc[]` to select specific rows and columns simultaneously.\n",
-        "\n",
-        "Using `cars['Model' == 'Pontiac Firebird'` to find the macthing row dynamically without hardcoding row numbers. For filters to four target columns `['Model', 'mpg', 'hp', 'wt']` is used."
-      ],
-      "metadata": {
-        "id": "Mg65vlcL-5R6"
-      },
-      "id": "Mg65vlcL-5R6"
-    },
-    {
-      "cell_type": "code",
-      "execution_count": null,
-      "id": "33885072-c8fd-4341-b579-d1f265bd1329",
-      "metadata": {
-        "id": "33885072-c8fd-4341-b579-d1f265bd1329",
-        "outputId": "eb3cbe18-4c9a-4eeb-cbac-381edf08493e"
-      },
-      "outputs": [
-        {
-          "data": {
-            "text/html": [
-              "<div>\n",
-              "<style scoped>\n",
-              "    .dataframe tbody tr th:only-of-type {\n",
-              "        vertical-align: middle;\n",
-              "    }\n",
-              "\n",
-              "    .dataframe tbody tr th {\n",
-              "        vertical-align: top;\n",
-              "    }\n",
-              "\n",
-              "    .dataframe thead th {\n",
-              "        text-align: right;\n",
-              "    }\n",
-              "</style>\n",
-              "<table border=\"1\" class=\"dataframe\">\n",
-              "  <thead>\n",
-              "    <tr style=\"text-align: right;\">\n",
-              "      <th></th>\n",
-              "      <th>Model</th>\n",
-              "      <th>mpg</th>\n",
-              "      <th>hp</th>\n",
-              "      <th>wt</th>\n",
-              "    </tr>\n",
-              "  </thead>\n",
-              "  <tbody>\n",
-              "    <tr>\n",
-              "      <th>24</th>\n",
-              "      <td>Pontiac Firebird</td>\n",
-              "      <td>19.2</td>\n",
-              "      <td>175</td>\n",
-              "      <td>3.845</td>\n",
-              "    </tr>\n",
-              "  </tbody>\n",
-              "</table>\n",
-              "</div>"
-            ],
-            "text/plain": [
-              "               Model   mpg   hp     wt\n",
-              "24  Pontiac Firebird  19.2  175  3.845"
-            ]
-          },
-          "metadata": {},
-          "output_type": "display_data"
-        }
-      ],
-      "source": [
-        "Pontiac = cars.loc[(cars['Model'] == 'Pontiac Firebird'), ['Model', 'mpg', 'hp', 'wt']]\n",
-        "display(Pontiac)"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "id": "c1633e1f-2324-45b7-8202-d7dfddbe71ca",
-      "metadata": {
-        "id": "c1633e1f-2324-45b7-8202-d7dfddbe71ca"
-      },
-      "source": [
-        "**C. MULTI-MODEL SUBSETTING**"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "source": [
-        "To define python list containing the exact target string values and column names to keep code structured and readable list setup is used."
-      ],
-      "metadata": {
-        "id": "FlzL7uCUD-tP"
-      },
-      "id": "FlzL7uCUD-tP"
-    },
-    {
-      "cell_type": "code",
-      "execution_count": null,
-      "id": "cce03366-6b0b-4389-a3c4-8f002154747d",
-      "metadata": {
-        "id": "cce03366-6b0b-4389-a3c4-8f002154747d"
-      },
-      "outputs": [],
-      "source": [
-        "target_models = ['Datsun 710', 'Lotus Europa', 'Ferrari Dino',]\n",
-        "target_cols = ['Model', 'mpg', 'cyl', 'gear']"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "source": [
-        "`.isin(target_models)` cheks if the string in the model column matches any iten inside the `target_models` list, generating a single Boolean filter. while `[target_cols]` immediately chians a column selection onto the filtered rows to retain only the desiredd variables."
-      ],
-      "metadata": {
-        "id": "iPi9d2wNEWkZ"
-      },
-      "id": "iPi9d2wNEWkZ"
-    },
-    {
-      "cell_type": "code",
-      "execution_count": null,
-      "id": "436aefd4-2b2e-4a97-8e24-92a4c1b9802a",
-      "metadata": {
-        "id": "436aefd4-2b2e-4a97-8e24-92a4c1b9802a"
-      },
-      "outputs": [],
-      "source": [
-        "selected_cars = cars[cars['Model'].isin(target_models)][target_cols]"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "source": [
-        "`display()` renders the resulting subset as formatted HTML table in jupyter. `.shape` displays `(3, 5)`, confirming the required chech of 3 rows and 5 columns."
-      ],
-      "metadata": {
-        "id": "tGy_0O-VFUmO"
-      },
-      "id": "tGy_0O-VFUmO"
-    },
-    {
-      "cell_type": "code",
-      "execution_count": null,
-      "id": "db469305-deee-497b-b733-a6f10da7d72c",
-      "metadata": {
-        "id": "db469305-deee-497b-b733-a6f10da7d72c",
-        "outputId": "d7c843a4-927b-4c1c-e2a7-3b0b16ac0195"
-      },
-      "outputs": [
-        {
-          "data": {
-            "text/html": [
-              "<div>\n",
-              "<style scoped>\n",
-              "    .dataframe tbody tr th:only-of-type {\n",
-              "        vertical-align: middle;\n",
-              "    }\n",
-              "\n",
-              "    .dataframe tbody tr th {\n",
-              "        vertical-align: top;\n",
-              "    }\n",
-              "\n",
-              "    .dataframe thead th {\n",
-              "        text-align: right;\n",
-              "    }\n",
-              "</style>\n",
-              "<table border=\"1\" class=\"dataframe\">\n",
-              "  <thead>\n",
-              "    <tr style=\"text-align: right;\">\n",
-              "      <th></th>\n",
-              "      <th>Model</th>\n",
-              "      <th>mpg</th>\n",
-              "      <th>cyl</th>\n",
-              "      <th>gear</th>\n",
-              "    </tr>\n",
-              "  </thead>\n",
-              "  <tbody>\n",
-              "    <tr>\n",
-              "      <th>2</th>\n",
-              "      <td>Datsun 710</td>\n",
-              "      <td>22.8</td>\n",
-              "      <td>4</td>\n",
-              "      <td>4</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>27</th>\n",
-              "      <td>Lotus Europa</td>\n",
-              "      <td>30.4</td>\n",
-              "      <td>4</td>\n",
-              "      <td>5</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>29</th>\n",
-              "      <td>Ferrari Dino</td>\n",
-              "      <td>19.7</td>\n",
-              "      <td>6</td>\n",
-              "      <td>5</td>\n",
-              "    </tr>\n",
-              "  </tbody>\n",
-              "</table>\n",
-              "</div>"
-            ],
-            "text/plain": [
-              "           Model   mpg  cyl  gear\n",
-              "2     Datsun 710  22.8    4     4\n",
-              "27  Lotus Europa  30.4    4     5\n",
-              "29  Ferrari Dino  19.7    6     5"
-            ]
-          },
-          "metadata": {},
-          "output_type": "display_data"
-        },
-        {
-          "data": {
-            "text/plain": [
-              "'Shape of selected_cars:'"
-            ]
-          },
-          "metadata": {},
-          "output_type": "display_data"
-        },
-        {
-          "data": {
-            "text/plain": [
-              "(3, 4)"
-            ]
-          },
-          "metadata": {},
-          "output_type": "display_data"
-        }
-      ],
-      "source": [
-        "display(selected_cars)\n",
-        "display(\"Shape of selected_cars:\", selected_cars.shape)"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "source": [
-        "#  **README File Version History**\n",
-        "\n",
-        "September 7, 2026: Added function implementations and detailed discussions for Problems A, B, and C.\n",
-        "\n",
-        "September 8, 2026: Initialized project repository and created initial README file structure.  \n",
-        "\n",
-        "September 9, 2026: Finalization and cheking"
-      ],
-      "metadata": {
-        "id": "b0epyBEbGG7C"
-      },
-      "id": "b0epyBEbGG7C"
-    },
-    {
-      "cell_type": "markdown",
-      "source": [
-        "Python program for PA3: [Code_Experiment 3.ipynb](https://github.com/maxinedgia-dot/Experiment-3/blob/f01a8ba7d5f2bc66066ae7edc73e96663613c3ed/Code_Experiment%203.ipynb)"
-      ],
-      "metadata": {
-        "id": "Feoxo5h4GHSQ"
-      },
-      "id": "Feoxo5h4GHSQ"
-    }
-  ],
-  "metadata": {
-    "kernelspec": {
-      "display_name": "Python 3 (ipykernel)",
-      "language": "python",
-      "name": "python3"
-    },
-    "language_info": {
-      "codemirror_mode": {
-        "name": "ipython",
-        "version": 3
-      },
-      "file_extension": ".py",
-      "mimetype": "text/x-python",
-      "name": "python",
-      "nbconvert_exporter": "python",
-      "pygments_lexer": "ipython3",
-      "version": "3.14.6"
-    },
-    "colab": {
-      "provenance": []
-    }
-  },
-  "nbformat": 4,
-  "nbformat_minor": 5
-}
+# **ECE2112-PA-3**
+
+
+---
+
+
+**De Guia, Maxine Juliana S.**  
+2ECE-D  
+
+This repository contains the Pandas implementation for ECE2112 Experiment 3: Python Data Analysis. It covers fundamental Pandas library operations for loading CSV datasets into DataFrames, performing positional (`.iloc`) and label-based (`.loc`) indexing, applying Boolean mask filtering on DataFrame columns, and extracting structured data subsets without modifying the original source dataset.
+
+```python
+import pandas as pd
+```
+
+## **A. POSITIONAL AND LABEL-BASED SLICING**
+
+`pd.read_csv('cars.csv')` reads the raw dataset and stores it in memory as a 2D table called a DataFrame named `cars`.
+
+```python
+cars = pd.read_csv('cars.csv')
+cars
+
+```
+
+`cars.shape` returns a tuple `(32, 12)` indicating the total dimensions of the dataset (32 rows and 12 columns) while `cars.columns` retrieves the column headers. Wrapping it in `list()` formats it into a standard Python list.
+
+```python
+print("Shape of cars:", cars.shape)
+print("Columns:", list(cars.columns))
+
+```
+
+`cars.iloc[6:11]` stands for integer location. It selects rows based on their 0-indexed position. In Python slicing `start:stop`, the stop index is exclusive. Index `6:11` extracts index positions 6, 7, 8, 9, and 10 which correspond to data rows 7 through 11 in 1-based counting.
+
+```python
+cars_6_to_10 = cars.iloc
+
+```
+
+`[['Model', 'mpg', 'cyl', 'hp', 'gear']]` uses double square brackets to perform label-based column selection, extracting only the specified columns from `cars_6_to_10` without altering row selections.
+
+```python
+selected_cols = cars_6_to_10[['Model', 'mpg', 'cyl', 'hp', 'gear']]
+selected_cols
+
+```
+
+---
+
+## **B. MODEL LOOKUP SLICING**
+
+`cars['Model'] == 'Toyota Corolla'` creates a boolean mask checking every row in the `Model` column. `cars[]` wraps the condition inside the outer DataFrame brackets to filter and return only the rows where the mask evaluates to `True`.
+
+```python
+toyota = cars[cars['Model'] == 'Toyota Corolla']
+display(toyota)
+
+```
+
+`cars.loc[row_condition, column_list]` uses label-based indexing `.loc[]` to select specific rows and columns simultaneously.
+
+Using `cars['Model'] == 'Pontiac Firebird'` finds the matching row dynamically without hardcoding row numbers. For filters to four target columns `['Model', 'mpg', 'hp', 'wt']` is used.
+
+```python
+Pontiac = cars.loc[(cars['Model'] == 'Pontiac Firebird'), ['Model', 'mpg', 'hp', 'wt']]
+display(Pontiac)
+
+```
+
+---
+
+## **C. MULTI-MODEL SUBSETTING**
+
+To define a Python list containing the exact target string values and column names to keep code structured and readable, list setup is used.
+
+```python
+target_models = ['Datsun 710', 'Lotus Europa', 'Ferrari Dino']
+target_cols = ['Model', 'mpg', 'cyl', 'gear']
+
+```
+
+`.isin(target_models)` checks if the string in the model column matches any item inside the `target_models` list, generating a single Boolean filter, while `[target_cols]` immediately chains a column selection onto the filtered rows to retain only the desired variables.
+
+```python
+selected_cars = cars[cars['Model'].isin(target_models)][target_cols]
+
+```
+
+`display()` renders the resulting subset as a formatted HTML table in Jupyter. `.shape` displays `(3, 4)`, confirming the required check of 3 rows and 4 columns.
+
+```python
+display(selected_cars)
+display("Shape of selected_cars:", selected_cars.shape)
+
+```
+
+---
+
+## **README File Version History**
+
+* **September 7, 2026**: Added function implementations and detailed discussions for Problems A, B, and C.
+* **September 8, 2026**: Initialized project repository and created initial README file structure.
+* **September 9, 2026**: Finalization and checking.
+
+---
+
+## **References**
+
+* Python program for PA3: [Code_Experiment 3.ipynb](https://www.google.com/search?q=https://github.com/maxinedgia-dot/Experiment-3/blob/f01a8ba7d5f2bc66066ae7edc73e96663613c3ed/Code_Experiment%25203.ipynb)
+
+```
+
+# **ECE2112-PA-3**
+
+---
+
+**De Guia, Maxine Juliana S.**  
+2ECE-D  
+
+This repository contains the Pandas implementation for ECE2112 Experiment 3: Python Data Analysis. It covers fundamental Pandas library operations for loading CSV datasets into DataFrames, performing positional (`.iloc`) and label-based (`.loc`) indexing, applying Boolean mask filtering on DataFrame columns, and extracting structured data subsets without modifying the original source dataset.
+
+---
+
+`import pandas as pd`
+
+```
+
+## **A. POSITIONAL AND LABEL-BASED SLICING**
+
+`pd.read_csv('cars.csv')` reads the raw dataset and stores it in memory as a 2D table called a DataFrame named `cars`.
+
+```python
+cars = pd.read_csv('cars.csv')
+cars
+
+```
+
+`cars.shape` returns a tuple `(32, 12)` indicating the total dimensions of the dataset (32 rows and 12 columns) while `cars.columns` retrieves the column headers. Wrapping it in `list()` formats it into a standard Python list.
+
+```python
+print("Shape of cars:", cars.shape)
+print("Columns:", list(cars.columns))
+
+```
+
+`cars.iloc[6:11]` stands for integer location. It selects rows based on their 0-indexed position. In Python slicing `start:stop`, the stop index is exclusive. Index `6:11` extracts index positions 6, 7, 8, 9, and 10 which correspond to data rows 7 through 11 in 1-based counting.
+
+```python
+cars_6_to_10 = cars.iloc
+
+```
+
+`[['Model', 'mpg', 'cyl', 'hp', 'gear']]` uses double square brackets to perform label-based column selection, extracting only the specified columns from `cars_6_to_10` without altering row selections.
+
+```python
+selected_cols = cars_6_to_10[['Model', 'mpg', 'cyl', 'hp', 'gear']]
+selected_cols
+
+```
+
+---
+
+## **B. MODEL LOOKUP SLICING**
+
+`cars['Model'] == 'Toyota Corolla'` creates a boolean mask checking every row in the `Model` column. `cars[]` wraps the condition inside the outer DataFrame brackets to filter and return only the rows where the mask evaluates to `True`.
+
+```python
+toyota = cars[cars['Model'] == 'Toyota Corolla']
+display(toyota)
+
+```
+
+`cars.loc[row_condition, column_list]` uses label-based indexing `.loc[]` to select specific rows and columns simultaneously.
+
+Using `cars['Model'] == 'Pontiac Firebird'` finds the matching row dynamically without hardcoding row numbers. For filters to four target columns `['Model', 'mpg', 'hp', 'wt']` is used.
+
+```python
+Pontiac = cars.loc[(cars['Model'] == 'Pontiac Firebird'), ['Model', 'mpg', 'hp', 'wt']]
+display(Pontiac)
+
+```
+
+---
+
+## **C. MULTI-MODEL SUBSETTING**
+
+To define a Python list containing the exact target string values and column names to keep code structured and readable, list setup is used.
+
+```python
+target_models = ['Datsun 710', 'Lotus Europa', 'Ferrari Dino']
+target_cols = ['Model', 'mpg', 'cyl', 'gear']
+
+```
+
+`.isin(target_models)` checks if the string in the model column matches any item inside the `target_models` list, generating a single Boolean filter, while `[target_cols]` immediately chains a column selection onto the filtered rows to retain only the desired variables.
+
+```python
+selected_cars = cars[cars['Model'].isin(target_models)][target_cols]
+
+```
+
+`display()` renders the resulting subset as a formatted HTML table in Jupyter. `.shape` displays `(3, 4)`, confirming the required check of 3 rows and 4 columns.
+
+```python
+display(selected_cars)
+display("Shape of selected_cars:", selected_cars.shape)
+
+```
+
+---
+
+## **README File Version History**
+
+* **September 7, 2026**: Added function implementations and detailed discussions for Problems A, B, and C.
+* **September 8, 2026**: Initialized project repository and created initial README file structure.
+* **September 9, 2026**: Finalization and checking.
+
+---
+
+## **References**
+
+* Python program for PA3: [Code_Experiment 3.ipynb](https://www.google.com/search?q=https://github.com/maxinedgia-dot/Experiment-3/blob/f01a8ba7d5f2bc66066ae7edc73e96663613c3ed/Code_Experiment%25203.ipynb)
+
+```
+
+```
